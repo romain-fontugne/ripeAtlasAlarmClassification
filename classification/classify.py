@@ -7,7 +7,7 @@ from datetime import datetime
 
 def makeGraph(start=datetime(2015,6,10,tzinfo=timezone("UTC")),
         end=datetime(2015,6,11,tzinfo=timezone("UTC")), min_deviation=3,
-        min_resp=0.5):
+        min_corr=-0.25):
     """Construct a graph from delay change and forwarding alarms.
 
     arguments:
@@ -15,6 +15,7 @@ def makeGraph(start=datetime(2015,6,10,tzinfo=timezone("UTC")),
     end -- last timestamp
     min_deviation -- minimum deviation for delay change alarms
     min_resp -- minimum responsibility (absolute value) for forwarding alarms 
+    min_corr -- minimum correlation (absolute value) for forwarding alarms 
 
     return: The constructed graph in form of a networkx graph
     """
@@ -41,7 +42,13 @@ def makeGraph(start=datetime(2015,6,10,tzinfo=timezone("UTC")),
     cursor = collection.find({
         "expId": objectid.ObjectId("56d9b1cbb0ab021d00224ca8"),
         "$and": [{"timeBin": {"$gte": start}}, {"timeBin": {"$lte": end}}],
+        "corr": {"$lt": min_corr},
         }) 
-    #TODO add forwarding anomalies
+
+    for alarm in cursor:
+        #TODO
+        pass
+
+    
 
     return g
